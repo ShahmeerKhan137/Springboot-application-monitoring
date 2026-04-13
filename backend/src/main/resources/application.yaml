@@ -1,8 +1,8 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/backenddb
-    username: alibaig
-    password: devops
+    username: shahmeer
+    password: nisum
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
