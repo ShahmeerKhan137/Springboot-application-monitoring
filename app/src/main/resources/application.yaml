@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/backenddb
-    username: shahmeer
-    password: nisum
+    url: jdbc:postgresql://my-postgres-postgresql:5432/backenddb
+    username: postgres
+    password: 75c2hn2wcj
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -15,6 +15,7 @@ spring:
     enabled: false
 server:
   port: 9090
+  address: 0.0.0.0
 management:
   endpoints:
     web:

@@ -1,6 +1,4 @@
-#using Multi-stage-Dockerfile
 
-#Stage 1 Builds the application
 FROM maven:3.8.4-openjdk-17-slim AS builder 
 WORKDIR /app
 COPY pom.xml .
