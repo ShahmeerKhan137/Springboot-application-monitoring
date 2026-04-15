@@ -1,63 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "java-app.fullname" . }}
-  labels:
-    {{- include "java-app.labels" . | nindent 4 }}
-
+  name: springboot-app
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-  {{- end }}
-
+  replicas: 1
   selector:
     matchLabels:
-      {{- include "java-app.selectorLabels" . | nindent 6 }}
-
+      app: springboot-app
   template:
     metadata:
       labels:
-        {{- include "java-app.labels" . | nindent 8 }}
-
+        app: springboot-app
     spec:
-      serviceAccountName: {{ include "java-app.serviceAccountName" . }}
-
       containers:
-        - name: {{ .Chart.Name }}
-
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-
+        - name: springboot-app
+          image: shahmeer138/springboot-app:latest
+          ports:
+            - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://my-postgres-postgresql:5432/postgres
-
+              value: jdbc:postgresql://postgres:5432/appdb
             - name: SPRING_DATASOURCE_USERNAME
-              value: postgres
-
+              value: appuser
             - name: SPRING_DATASOURCE_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: my-postgres-postgresql
-                  key: postgres-password
-
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
-
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: http
-            initialDelaySeconds: 90
-            periodSeconds: 20
-            timeoutSeconds: 5
-
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: http
-            initialDelaySeconds: 60
-            periodSeconds: 10
-            timeoutSeconds: 5
+              value: apppass
