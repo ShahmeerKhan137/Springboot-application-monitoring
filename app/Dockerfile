@@ -1,18 +1,9 @@
+FROM eclipse-temurin:17-jdk
 
-FROM maven:3.8.4-openjdk-17-slim AS builder 
 WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn package -DskipTests
 
-# Stage 2 Runs Application
-FROM amazoncorretto:17-alpine
-WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
-EXPOSE 9090
-ENTRYPOINT ["java" , "-jar" , "app.jar"]
+COPY target/*.jar app.jar
 
+EXPOSE 8080
 
- 
-
-
+ENTRYPOINT ["java", "-jar", "app.jar"]
