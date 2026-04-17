@@ -16,7 +16,7 @@ spec:
         - name: springboot-app
           image: shahmeer138/springboot-app:latest
           ports:
-            - containerPort: 8080
+            - containerPort: 9090
           env:
             - name: SPRING_DATASOURCE_URL
               value: jdbc:postgresql://postgres:5432/appdb
