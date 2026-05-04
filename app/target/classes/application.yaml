@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://my-postgres-postgresql:5432/backenddb
-    username: postgres
-    password: 75c2hn2wcj
+    url: jdbc:postgresql://postgres-postgresql:5432/appdb
+    username: appuser
+    password: apppass
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,19 +12,24 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+
   flyway:
     enabled: false
+
 server:
   port: 9090
   address: 0.0.0.0
+
 management:
   endpoints:
     web:
       exposure:
         include: health,metrics,prometheus
+
   endpoint:
     metrics:
       enabled: true
+
   metrics:
     export:
       simple:
