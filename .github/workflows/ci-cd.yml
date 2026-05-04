@@ -1,0 +1,57 @@
+name: Spring Boot CI/CD Pipeline
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build-test-deploy:
+    runs-on: self-hosted   # tumhara VM runner
+
+    steps:
+      # 1. Checkout
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 3. Build
+      - name: Build with Maven
+        run: |
+          cd app
+          mvn clean package -DskipTests
+
+      # 4. Test
+      - name: Run Tests
+        run: |
+          cd app
+          mvn test
+
+      # 5. Docker Build
+      - name: Docker Build
+        run: |
+          cd app
+          docker build -t springboot-app:latest .
+
+      # 6. Docker Login (DockerHub example)
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # 7. Docker Push
+      - name: Push Image
+        run: |
+          docker tag springboot-app:latest ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
+
+      # 8. Helm Deploy
+      - name: Deploy with Helm
+        run: |
+          helm upgrade --install springboot-app ./helm/java-app \
+            --set image.repository=${{ secrets.DOCKER_USERNAME }}/springboot-app \
+            --set image.tag=latest
