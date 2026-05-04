@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-test-deploy:
-    runs-on: self-hosted   # tumhara VM runner
+    runs-on: self-hosted   
 
     steps:
       # 1. Checkout
