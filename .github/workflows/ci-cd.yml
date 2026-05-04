@@ -6,45 +6,56 @@ on:
 
 jobs:
   build-test-deploy:
-    runs-on: self-hosted   
+    runs-on: self-hosted
 
     steps:
       # 1. Checkout
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 3. Build
+      # 2. Build
       - name: Build with Maven
         run: |
           cd app
           mvn clean package -DskipTests
 
-      # 4. Test
+      # 3. Test
       - name: Run Tests
         run: |
           cd app
           mvn test
 
-      # 5. Docker Build
+      # 4. Docker Build
       - name: Docker Build
         run: |
           cd app
           docker build -t springboot-app:latest .
 
-      # 6. Docker Login (DockerHub example)
+      # 5. Docker Login
       - name: Docker Login
         run: |
           echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 7. Docker Push
+      # 6. Docker Push
       - name: Push Image
         run: |
           docker tag springboot-app:latest ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/springboot-app:latest
 
-      # 8. Helm Deploy
+      # 7. Set Kubernetes Context (IMPORTANT FIX)
+      - name: Set Kubernetes Context
+        run: |
+          kubectl config use-context rancher-desktop
+
+      # 8. Verify Cluster Access (DEBUG SAFE)
+      - name: Verify Cluster
+        run: |
+          kubectl get nodes
+
+      # 9. Helm Deploy
       - name: Deploy with Helm
         run: |
           helm upgrade --install springboot-app ./helm/java-app \
+            --namespace default \
             --set image.repository=${{ secrets.DOCKER_USERNAME }}/springboot-app \
             --set image.tag=latest
