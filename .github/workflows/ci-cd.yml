@@ -19,6 +19,7 @@ jobs:
           java-version: 17
 
       - name: Build Maven App
+        working-directory: app
         run: mvn clean package -DskipTests
 
       - name: Login DockerHub
