@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-app:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/spring-app:latest ./app
 
       - name: Push Docker Image
         run: |
