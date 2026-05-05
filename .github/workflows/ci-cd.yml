@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.AZURE_SSH_KEY }}
           script: |
             export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-
+             cd Springboot-application-monitoring
             helm upgrade --install spring-app ./helm/java-app \
               --set image.repository=${{ secrets.DOCKER_USERNAME }}/spring-app \
               --set image.tag=latest
