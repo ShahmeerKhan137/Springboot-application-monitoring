@@ -48,5 +48,5 @@ jobs:
             export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 
             helm upgrade --install spring-app ./helm/spring-app \
-              --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/spring-app \
+              --set image.repository=${{ secrets.DOCKER_USERNAME }}/spring-app \
               --set image.tag=latest
